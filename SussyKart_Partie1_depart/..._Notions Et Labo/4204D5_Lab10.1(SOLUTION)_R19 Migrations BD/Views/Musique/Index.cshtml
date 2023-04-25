@@ -1,0 +1,21 @@
+﻿
+<p>Bonjour @ViewData["utilisateur"] !</p>
+
+<h1>Index</h1>
+
+<a class="btn btn-primary" asp-action="ChanteursEtChansons">Chanteurs + Chansons</a>
+<br>
+<a class="btn btn-primary" asp-action="Chanteurs">Chanteurs</a>
+<br>
+<form asp-action="UnChanteurEtSesChansons" method="get">
+    <input type="text" name="chanteurRecherche" placeholder="Dua Lipa"><button type="submit">Chanteur + ses chansons</button>
+    <span>@ViewData["chanteurNonTrouve"]</span>
+</form>
+<br>
+<a class="btn btn-primary" asp-action="Inscription" asp-controller="Utilisateurs">Inscription</a>
+<br>
+<a class="btn btn-primary" asp-action="Connexion" asp-controller="Utilisateurs">Connexion</a>
+<br>
+<a class="btn btn-primary" asp-action="Deconnexion" asp-controller="Utilisateurs">Déconnexion</a>
+<br>
+<a class="btn btn-primary" asp-action="Profil" asp-controller="Utilisateurs">Profil</a>
