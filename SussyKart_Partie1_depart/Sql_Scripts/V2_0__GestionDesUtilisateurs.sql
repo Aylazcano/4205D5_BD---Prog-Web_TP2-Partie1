@@ -5,7 +5,7 @@ GO
 --	Ajout de tables, master key, certificat et clé symétrique
 -- •○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•
 
---Ajout de tables
+-- Ajout de tables
 ALTER TABLE Utilisateurs.Utilisateur
 ADD 
 MotDePasseHache varbinary(32) NULL,
@@ -13,15 +13,15 @@ MdpSel varbinary(16) NULL,
 NoCompteBancaireHache nvarchar(max) NULL;
 GO
 
---Création d'une Master Key
+-- Création d'une Master Key
 CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'M0tD3P@sse!';
 GO
 
---Création de certificat
+-- Création de certificat
 CREATE CERTIFICATE MonCertificat WITH SUBJECT = 'ChiffrementNoCompteBancaire';
 GO
 
---Création de clé symetrique
+-- Création de clé symetrique
 CREATE SYMMETRIC KEY MaCleSymetrique WITH ALGORITHM = AES_256 ENCRYPTION BY CERTIFICATE MonCertificat;
 GO
 
@@ -61,14 +61,14 @@ BEGIN
 
 	-- Chiffrement du numero de compte bancaire
 	OPEN SYMMETRIC KEY MaCleSymetrique
-	DECRYPTION BY CERTIFICAT MonCertificat;
+	DECRYPTION BY CERTIFICATE MonCertificat;
+
 	DECLARE @NoCompteBancaireChiffre varbinary(max) = EncryptByKey(KEY_GUID('MaCleSymetrique'), @NoCompteBancaire)
 	CLOSE SYMMETRIC KEY MaCleSymetrique;
-
+	
 	-- Insertion
-	INSERT INTO Utilisateurs.Utilisateur (Pseudo, DateInscription, Courriel, MotDePasseHache, NoCompteBancaire, EstSuppr)
-	VALUES (@Pseudo, GETDATE(), @Courriel, @MotDePasseHache, @NoCompteBancaireChiffre, 0);
-
+	INSERT INTO Utilisateurs.Utilisateur (Pseudo, DateInscription, Courriel, MotDePasseHache, MdpSel, NoCompteBancaire, EstSuppr)
+	VALUES (@Pseudo, GETDATE(), @Courriel, @MotDePasseHache, @MdpSel, @NoCompteBancaireChiffre, 0);
 END
 GO
 
@@ -78,7 +78,7 @@ CREATE PROCEDURE Utilisateurs.USP_AuthUtilisateur
 	@MotDePasse nvarchar(100)
 AS
 BEGIN	
-	DECLARE @Sel varbinary(16)
+	DECLARE @Sel varbinary(16);
 	DECLARE @MdpHache varbinary(32);
 	SELECT @Sel = MdpSel, @MdpHache = MotDePasseHache
 	FROM Utilisateurs.Utilisateur

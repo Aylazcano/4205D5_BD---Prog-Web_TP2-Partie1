@@ -1,5 +1,6 @@
 using SussyKart_Partie1.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<TP2_SussyKartContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SussyKart")));
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+{
+    options.LoginPath = "/Utilisateurs/Connexion";
+    options.LogoutPath= "/Utilisateurs/Deconnexion";
+});
 
 var app = builder.Build();
 
@@ -22,6 +29,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
