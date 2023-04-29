@@ -10,7 +10,7 @@ ALTER TABLE Utilisateurs.Utilisateur
 ADD 
 MotDePasseHache varbinary(32) NULL,
 Sel varbinary(16) NULL,
-NoCompteBancaireHache nvarchar(max) NULL;
+NoCompteBancaireChiffre nvarchar(max) NULL;
 GO
 
 -- Création d'une Master Key
@@ -56,7 +56,7 @@ BEGIN
 	CLOSE SYMMETRIC KEY MaCleSymetrique;
 	
 	-- Insertion
-	INSERT INTO Utilisateurs.Utilisateur (Pseudo, DateInscription, Courriel, MotDePasseHache, Sel, NoCompteBancaire, EstSuppr)
+	INSERT INTO Utilisateurs.Utilisateur (Pseudo, DateInscription, Courriel, MotDePasseHache, Sel, NoCompteBancaireChiffre, EstSuppr)
 	VALUES (@Pseudo, GETDATE(), @Courriel, @MotDePasseHache, @Sel, @NoCompteBancaireChiffre, 0);
 END
 GO
@@ -94,7 +94,7 @@ DECRYPTION BY CERTIFICATE MonCertificat;
 UPDATE Utilisateurs.Utilisateur
 SET Sel = CRYPT_GEN_RANDOM(16),
 	MotDePasseHache = HASHBYTES('SHA2_256', CONCAT(N'patate', Sel)),
-	NoCompteBancaireHache = EncryptByKey(KEY_GUID('MaCleSymetrique'), N'123456789')
+	NoCompteBancaireChiffre = EncryptByKey(KEY_GUID('MaCleSymetrique'), N'123456789')
 GO
 
 CLOSE SYMMETRIC KEY MaCleSymetrique;
