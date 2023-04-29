@@ -1,0 +1,69 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = _4204D5_labo10
+build_property.RootNamespace = _4204D5_labo10
+build_property.ProjectDir = C:\Users\Alexi\OneDrive\Bureau\4205D5_BD---Prog-Web_TP2-Partie1\SussyKart_Partie1_depart\..._Notions Et Labo\Labo 10 Partie 2 SOLUTION\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Alexi\OneDrive\Bureau\4205D5_BD---Prog-Web_TP2-Partie1\SussyKart_Partie1_depart\..._Notions Et Labo\Labo 10 Partie 2 SOLUTION
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/Alexi/OneDrive/Bureau/4205D5_BD---Prog-Web_TP2-Partie1/SussyKart_Partie1_depart/..._Notions Et Labo/Labo 10 Partie 2 SOLUTION/Views/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alexi/OneDrive/Bureau/4205D5_BD---Prog-Web_TP2-Partie1/SussyKart_Partie1_depart/..._Notions Et Labo/Labo 10 Partie 2 SOLUTION/Views/Musique/Chanteurs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTXVzaXF1ZVxDaGFudGV1cnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alexi/OneDrive/Bureau/4205D5_BD---Prog-Web_TP2-Partie1/SussyKart_Partie1_depart/..._Notions Et Labo/Labo 10 Partie 2 SOLUTION/Views/Musique/ChanteursEtChansons.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTXVzaXF1ZVxDaGFudGV1cnNFdENoYW5zb25zLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alexi/OneDrive/Bureau/4205D5_BD---Prog-Web_TP2-Partie1/SussyKart_Partie1_depart/..._Notions Et Labo/Labo 10 Partie 2 SOLUTION/Views/Musique/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTXVzaXF1ZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alexi/OneDrive/Bureau/4205D5_BD---Prog-Web_TP2-Partie1/SussyKart_Partie1_depart/..._Notions Et Labo/Labo 10 Partie 2 SOLUTION/Views/Musique/UnChanteurEtSesChansons.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTXVzaXF1ZVxVbkNoYW50ZXVyRXRTZXNDaGFuc29ucy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alexi/OneDrive/Bureau/4205D5_BD---Prog-Web_TP2-Partie1/SussyKart_Partie1_depart/..._Notions Et Labo/Labo 10 Partie 2 SOLUTION/Views/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJpdmFjeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alexi/OneDrive/Bureau/4205D5_BD---Prog-Web_TP2-Partie1/SussyKart_Partie1_depart/..._Notions Et Labo/Labo 10 Partie 2 SOLUTION/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alexi/OneDrive/Bureau/4205D5_BD---Prog-Web_TP2-Partie1/SussyKart_Partie1_depart/..._Notions Et Labo/Labo 10 Partie 2 SOLUTION/Views/Utilisateurs/Connexion.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXRpbGlzYXRldXJzXENvbm5leGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alexi/OneDrive/Bureau/4205D5_BD---Prog-Web_TP2-Partie1/SussyKart_Partie1_depart/..._Notions Et Labo/Labo 10 Partie 2 SOLUTION/Views/Utilisateurs/Inscription.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXRpbGlzYXRldXJzXEluc2NyaXB0aW9uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alexi/OneDrive/Bureau/4205D5_BD---Prog-Web_TP2-Partie1/SussyKart_Partie1_depart/..._Notions Et Labo/Labo 10 Partie 2 SOLUTION/Views/Utilisateurs/Profil.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXRpbGlzYXRldXJzXFByb2ZpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alexi/OneDrive/Bureau/4205D5_BD---Prog-Web_TP2-Partie1/SussyKart_Partie1_depart/..._Notions Et Labo/Labo 10 Partie 2 SOLUTION/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alexi/OneDrive/Bureau/4205D5_BD---Prog-Web_TP2-Partie1/SussyKart_Partie1_depart/..._Notions Et Labo/Labo 10 Partie 2 SOLUTION/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Alexi/OneDrive/Bureau/4205D5_BD---Prog-Web_TP2-Partie1/SussyKart_Partie1_depart/..._Notions Et Labo/Labo 10 Partie 2 SOLUTION/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-5b8n3psjam
