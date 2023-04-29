@@ -34,38 +34,39 @@ namespace SussyKart_Partie1.Controllers
         }
 
         [HttpPost]
-        public IActionResult Jouer(ParticipationVM pvm)
-        {
-            // Le paramètre pvm est déjà rempli par la View Jouer et il est reçu par cette action... qui est vide.
-            return View();
-        }
-
-        //[Authorize]
-        //public async Task<IActionResult> SummitParticipation(ParticipationVM pvm)
+        //public IActionResult Jouer(ParticipationVM pvm)
         //{
         //    // Le paramètre pvm est déjà rempli par la View Jouer et il est reçu par cette action... qui est vide.
-        //    // Manière habituelle de récupérer un utilisateur
-        //    IIdentity? identite = HttpContext.User.Identity;
-        //    string pseudo = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-        //    Utilisateur? utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(x => x.Pseudo == pseudo);
-
-        //    if (utilisateur == null) // Utilisateur supprimé entre-temps ... ?
-        //    {
-        //        return RedirectToAction("Connexion", "Utilisateurs");
-        //    }
-
-        //    // Insertion
-        //    string query = "EXEC Jeu.USP_InsertParticipation @Position, @Chrono, @NbJoueurs, @NomCourse, @UtilisateurId";
-        //    List<SqlParameter> parameters = new List<SqlParameter>
-        //    {
-        //        new SqlParameter{ParameterName = "@Position", Value = pvm.Position},
-        //        new SqlParameter{ParameterName = "@Chrono", Value = pvm.Chrono},
-        //        new SqlParameter{ParameterName = "@NbJoueurs", Value = pvm.NbJoueurs},
-        //        new SqlParameter{ParameterName = "@NomCourse", Value = pvm.NomCourse},
-        //        new SqlParameter{ParameterName = "@UserID", Value = utilisateur.UtilisateurId}
-        //    };
-
         //    return View();
         //}
+
+        [Authorize]
+        public async Task<IActionResult> Jouer(ParticipationVM pvm)
+        {
+            // Le paramètre pvm est déjà rempli par la View Jouer et il est reçu par cette action... qui est vide.
+            // Manière habituelle de récupérer un utilisateur
+            IIdentity? identite = HttpContext.User.Identity;
+            string pseudo = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            Utilisateur? utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(x => x.Pseudo == pseudo);
+
+            if (utilisateur == null) // Utilisateur supprimé entre-temps ... ?
+            {
+                return RedirectToAction("Connexion", "Utilisateurs");
+            }
+
+            // Insertion
+            string query = "EXEC USP_InsertParticipationCourse @Position, @Chrono, @NbJoueurs, @NomCourse, @UserId";
+            List<SqlParameter> parameters = new List<SqlParameter>
+            {
+                new SqlParameter{ParameterName = "@Position", Value = pvm.Position},
+                new SqlParameter{ParameterName = "@Chrono", Value = pvm.Chrono},
+                new SqlParameter{ParameterName = "@NbJoueurs", Value = pvm.NbJoueurs},
+                new SqlParameter{ParameterName = "@NomCourse", Value = pvm.NomCourse},
+                new SqlParameter{ParameterName = "@UserID", Value = utilisateur.UtilisateurId}
+            };
+            await _context.Database.ExecuteSqlRawAsync(query, parameters.ToArray());
+
+            return View();
+        }
     }
 }

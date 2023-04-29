@@ -38,14 +38,6 @@ namespace SussyKart_Partie1.Controllers
                 return View(ivm);
             }
 
-            // Déjà dans InscriptionVM.cs
-            //// Le MotDePasse et le MotDePasseConfirmation sont identiques ?
-            //if (ivm.MotDePasse != ivm.MotDePasseConfirmation)
-            //{
-            //    ModelState.AddModelError("MotDePasseConfirmation", "Les deux mots de passe doivent être identiques.");
-            //    return View(ivm);
-            //}
-
             // On INSERT l'utilisateur avec une procédure stockée qui va s'occuper de
             // hacher le mot de passe, chiffrer la NoCompteBancaire ...
             string query = "EXEC Utilisateurs.USP_CreerUtilisateur @Pseudo, @Courriel, @NoCompteBancaire, @MotDePasse";
