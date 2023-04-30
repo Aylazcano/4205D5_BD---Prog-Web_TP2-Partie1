@@ -33,13 +33,6 @@ namespace SussyKart_Partie1.Controllers
             return View();
         }
 
-        [HttpPost]
-        //public IActionResult Jouer(ParticipationVM pvm)
-        //{
-        //    // Le paramètre pvm est déjà rempli par la View Jouer et il est reçu par cette action... qui est vide.
-        //    return View();
-        //}
-
         [Authorize]
         public async Task<IActionResult> Jouer(ParticipationVM pvm)
         {

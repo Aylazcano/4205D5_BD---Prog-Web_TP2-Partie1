@@ -107,29 +107,35 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- █foreach (var item in Model...) -->
-                <!--{-->
-                <tr>
-                    <td>
-                        <!-- Pseudo du joueur -->
-                    </td>
-                    <td>
-                        <!-- Nom de la course -->
-                    </td>
-                    <td>
-                        <!-- Nombre de joueurs -->
-                    </td>
-                    <td>
-                        <!-- Position -->
-                    </td>
-                    <td>
-                        <!-- Chrono -->
-                    </td>
-                    <td>
-                        <!-- Date de la participation -->
-                    </td>
-                </tr>
-                <!--}-->
+                    @foreach (var item in Model.DetailsParticipation)
+                    {
+                        <tr>
+                            <td>
+                                <!-- Pseudo du joueur -->
+                            @Html.DisplayFor(modelItem => item.Joueur)
+                            </td>
+                            <td>
+                                <!-- Nom de la course -->
+                            @Html.DisplayFor(modelItem => item.Course)
+                            </td>
+                            <td>
+                                <!-- Nombre de joueurs -->
+                            @Html.DisplayFor(modelItem => item.NbJoueurs)
+                            </td>
+                            <td>
+                                <!-- Position -->
+                            @Html.DisplayFor(modelItem => item.Position)
+                            </td>
+                            <td>
+                                <!-- Chrono -->
+                            @Html.DisplayFor(modelItem => item.Chrono)
+                            </td>
+                            <td>
+                                <!-- Date de la participation -->
+                            @Html.DisplayFor(modelItem => item.DateParticipation)
+                            </td>
+                        </tr>
+                    }
             </tbody>
         </table>
     </div>
