@@ -22,62 +22,82 @@ namespace SussyKart_Partie1.Controllers
         public async Task<IActionResult> ToutesParticipations()
         {
             // Obtenir les participations grâce à une vue SQL
-            var participations = await _context.VwDetailsParticipations.FromSqlRaw("SELECT * FROM Courses.VW_DetailsParticipations").Take(30).ToListAsync();
+            var participations = await _context.VwDetailsParticipations.FromSqlRaw("SELECT * FROM Courses.VW_DetailsParticipations").OrderByDescending(p => p.DateParticipation).Take(30).ToListAsync();
 
             return View(new FiltreParticipationVM
             {
                 DetailsParticipation = participations
             });
         }
-        //public async Task<IActionResult> ToutesParticipations(int? page)
-        //{
-        //    int pageSize = 30; // nombre de participations par page
-        //    int pageNumber = (page ?? 1); // numéro de la page à afficher (1 par défaut)
-
-        //    // récupérer les participations grâce à une vue SQL qui gère les jointures
-        //    var participations = await _context.VwDetailsParticipations.ToListAsync();
-
-        //    // trier les participations par ordre décroissant de la date
-        //    participations = participations.OrderByDescending(p => p.DateParticipation).ToList();
-
-        //    // paginer les résultats
-        //    var paginatedParticipations = participations.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-
-        //    // stocker les participations paginées dans la liste ajoutée à FiltreParticipationVM
-        //    var vm = new FiltreParticipationVM
-        //    {
-        //        DetailsParticipation = paginatedParticipations
-        //    };
-
-        //    return View(vm);
-        //}
-
 
         public IActionResult ToutesParticipationsFiltre(FiltreParticipationVM fpvm)
         {
             // Obtenir les participations grâce à une vue SQL
+            IQueryable<VwDetailsParticipation> participationsQuery = _context.VwDetailsParticipations;
 
-            if(fpvm.Pseudo != null)
+            if (fpvm.Pseudo != null)
             {
                 // ...
+                participationsQuery = participationsQuery.Where(p => p.Joueur == fpvm.Pseudo);
             }
 
-            if(fpvm.Course != "Toutes")
+            if (fpvm.Course != "Toutes")
             {
                 // ...
+                participationsQuery = participationsQuery.Where(p => p.Course == fpvm.Course);
             }
 
             // Trier soit par date, soit par chrono (fpvm.Ordre) de manière croissante ou décroissante (fpvm.TypeOrdre)
-
+            if (fpvm.Ordre == "Date")
+            {
+                if (fpvm.TypeOrdre == "ASC")
+                {
+                    participationsQuery = participationsQuery.OrderBy(p => p.DateParticipation);
+                }
+                else
+                {
+                    participationsQuery = participationsQuery.OrderByDescending(p => p.DateParticipation);
+                }
+            }
+            else
+            {
+                if (fpvm.TypeOrdre == "ASC")
+                {
+                    participationsQuery = participationsQuery.OrderBy(p => p.Chrono);
+                }
+                else
+                {
+                    participationsQuery = participationsQuery.OrderByDescending(p => p.Chrono);
+                }
+            }
             // Sauter des paquets de 30 participations si la page est supérieure à 1
+            int pageSize = 30; // nombre de participations par page
+            int pageNumber = fpvm.Page;
+            fpvm.DetailsParticipation = participationsQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
             return View("ToutesParticipations", fpvm);
         }
 
         // Section 2 : Compléter ParticipationsParCourse OU ChronoParCourseParTour
-        public IActionResult ParticipationsParCourse()
+        public async Task<IActionResult> ParticipationsParCourseAsync()
         {
-            return View();
+            // Obtenir les participations grâce à une vue SQL
+            //var participations = await _context.VwDetailsParticipations.FromSqlRaw("SELECT Course, COUNT(*) AS nbParticipation FROM Courses.VW_DetailsParticipations")
+            //    .ToListAsync();
+            IEnumerable<VwDetailsParticipation> participations = await _context.VwDetailsParticipations.FromSqlRaw("SELECT * FROM Courses.VW_DetailsParticipations").ToListAsync();
+
+            var participationsQuery = from p in participations
+                                      group p.NbJoueurs by p.Course into result
+                                      select new { Course = result.Key, NbJoueurs = result.Count() };
+
+            List<ParticipationVM> courseAvecNbParticipations = new List<ParticipationVM>();
+
+            foreach(var p in participationsQuery)
+            {
+                courseAvecNbParticipations.Add(new ParticipationVM(p.Course, p.NbJoueurs));
+            }
+
+            return View(courseAvecNbParticipations);
         }
 
         public IActionResult ChronoParCourseParTour()

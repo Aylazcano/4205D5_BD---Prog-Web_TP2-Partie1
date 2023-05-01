@@ -1,4 +1,5 @@
-﻿
+﻿@model IEnumerable<ParticipationVM>
+
 <div class="container">
     <h2>Nombre de participations par course</h2>
     <div class="row justify-content-center">
@@ -9,24 +10,31 @@
                     <tr>
                         <th>
                             <!-- Nom de la course -->
+                            Course
                         </th>
                         <th>
                             <!-- Nombre de participations -->
+                            Nombre de participations
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- █foreach (var item in Model...) -->
                     <!--{-->
-                    <tr>
-                        <td>
-                            <!-- Nom de la course -->
-                        </td>
-                        <td>
-                            <!-- Nombre de participations -->
-                        </td>
-                    </tr>
-                    <!--}-->
+                        @foreach (var item in Model.ToList())
+                        {
+                            <tr>
+                                <td>
+                                    <!-- Nom de la course -->
+                                    @Html.DisplayFor(modelItem => item.NomCourse)
+                                </td>
+                                <td>
+                                    <!-- Nombre de participations -->
+                                    @Html.DisplayFor(modelItem => item.NbJoueurs)
+                                    
+                                </td>
+                            </tr>
+                        }
                 </tbody>
             </table>
         </div>

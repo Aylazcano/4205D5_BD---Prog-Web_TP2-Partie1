@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SussyKart_Partie1.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace SussyKart_Partie1.ViewModels
 {
@@ -18,5 +19,13 @@ namespace SussyKart_Partie1.ViewModels
 
         [Required]
         public string NomCourse { get; set; } = null!;
+
+        public List<ParticipationVM> ParticipationsCoursesVM { get; set; } = new List<ParticipationVM>();
+        public ParticipationVM(string course, int nbJoueurs)
+        {
+            NomCourse = course;
+            NbJoueurs = nbJoueurs;
+        }
+
     }
 }
