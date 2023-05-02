@@ -81,24 +81,22 @@ namespace SussyKart_Partie1.Controllers
         // Section 2 : Compléter ParticipationsParCourse OU ChronoParCourseParTour
         public async Task<IActionResult> ParticipationsParCourseAsync()
         {
-            // Obtenir les participations grâce à une vue SQL
-            //var participations = await _context.VwDetailsParticipations.FromSqlRaw("SELECT Course, COUNT(*) AS nbParticipation FROM Courses.VW_DetailsParticipations")
-            //    .ToListAsync();
             IEnumerable<VwDetailsParticipation> participations = await _context.VwDetailsParticipations.FromSqlRaw("SELECT * FROM Courses.VW_DetailsParticipations").ToListAsync();
 
-            var participationsQuery = from p in participations
-                                      group p.NbJoueurs by p.Course into result
-                                      select new { Course = result.Key, NbJoueurs = result.Count() };
+            var participationsQuery = participations
+                .GroupBy(p => p.Course)
+                .Select(g => new ParticipationVM
+                {
+                    NomCourse = g.Key,
+                    NbJoueurs = g.Select(p => p.Joueur).Distinct().Count(),
+                    Position = g.OrderBy(p => p.Position).ThenBy(p => p.Chrono).First().Position,
+                    Chrono = g.OrderBy(p => p.Position).ThenBy(p => p.Chrono).First().Chrono
+                })
+                .ToList();
 
-            List<ParticipationVM> courseAvecNbParticipations = new List<ParticipationVM>();
-
-            foreach(var p in participationsQuery)
-            {
-                courseAvecNbParticipations.Add(new ParticipationVM(p.Course, p.NbJoueurs));
-            }
-
-            return View(courseAvecNbParticipations);
+            return View(participationsQuery);
         }
+
 
         public IActionResult ChronoParCourseParTour()
         {
