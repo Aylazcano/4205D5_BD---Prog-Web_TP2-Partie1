@@ -1,0 +1,75 @@
+﻿@model _4204D5_labo9_mvc.ViewModels.ArtisteEmployeViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>Artiste</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!-- 
+                ♦♦♦ ATTENTION ! Pour que le Model soit valide, toutes les propriétés 
+                qu'on ne souhaite pas rendre modifiables doivent quand même être présentes
+                ici, mais cachée. (type = hidden) ♦♦♦
+             -->
+            <input type="hidden" asp-for="Artiste.ArtisteId" />
+            <input type="hidden" asp-for="Artiste.EmployeId" />
+            <input type="hidden" asp-for="Employe.EmployeId" />
+            <div class="form-group">
+                <label asp-for="Artiste.Specialite" class="control-label"></label>
+                <input asp-for="Artiste.Specialite" class="form-control" />
+                <span asp-validation-for="Artiste.Specialite" class="text-danger"></span>
+            </div>
+            <!-- ♦♦♦ Retiré car pas intéressant à modifier ♦♦♦
+            <div class="form-group">
+                <label asp-for="Artiste.EmployeId" class="control-label"></label>
+                <select asp-for="Artiste.EmployeId" class="form-control" asp-items="ViewBag.EmployeId"></select>
+                <span asp-validation-for="Artiste.EmployeId" class="text-danger"></span>
+            </div>
+            -->
+            <!-- ♦♦♦ On a ajouté plusieurs champs. C'est surtout du copié-collé de la vue Create ♦♦♦ -->
+            <div class="form-group">
+                <label asp-for="Employe.Prenom" class="control-label"></label>
+                <input asp-for="Employe.Prenom" class="form-control" />
+                <span asp-validation-for="Employe.Prenom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Employe.Nom" class="control-label"></label>
+                <input asp-for="Employe.Nom" class="form-control" />
+                <span asp-validation-for="Employe.Nom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Employe.NoTel" class="control-label"></label>
+                <input asp-for="Employe.NoTel" class="form-control" />
+                <span asp-validation-for="Employe.NoTel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Employe.Courriel" class="control-label"></label>
+                <input asp-for="Employe.Courriel" class="form-control" />
+                <span asp-validation-for="Employe.Courriel" class="text-danger"></span>
+            </div
+            <div class="form-group">
+                <label asp-for="Employe.DateEmbauche" class="control-label"></label>
+                <input asp-for="Employe.DateEmbauche" class="form-control" />
+                <span asp-validation-for="Employe.DateEmbauche" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

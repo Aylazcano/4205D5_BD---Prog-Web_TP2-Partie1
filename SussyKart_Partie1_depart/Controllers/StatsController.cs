@@ -106,7 +106,20 @@ namespace SussyKart_Partie1.Controllers
         // Section 3 : Compléter MeilleursChronosSolo ou MeilleursChronosQuatre
         public IActionResult MeilleursChronosSolo()
         {
-            return View();
+            var meilleursChronos = _context.ParticipationCourses
+                .Where(pc => pc.NbJoueurs == 1)
+                .OrderBy(pc => pc.Chrono)
+                .Take(30)
+                .Select(pc => new MeilleursChronosSoloVM
+                {
+                    Joueur = pc.Utilisateur.Pseudo,
+                    Course = pc.Course.Nom,
+                    Position = pc.Position,
+                    Chrono = pc.Chrono,
+                    DateParticipation = pc.DateParticipation
+                });
+
+            return View(meilleursChronos);
         }
 
         public IActionResult MeilleursChronosQuatre()

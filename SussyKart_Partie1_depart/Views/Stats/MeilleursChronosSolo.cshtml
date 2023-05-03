@@ -1,4 +1,5 @@
-﻿
+﻿@using SussyKart_Partie1.Models;
+@model IEnumerable<MeilleursChronosSoloVM>
 
 <div class="container">
     <h2>Meilleurs chronos dans des parties solo</h2>
@@ -30,27 +31,26 @@
                     </tr>
                 </thead>
                 <tbody>
-
-                    <!-- █foreach (var item in Model...) -->
-                    <!--{-->
-                    <tr>
-                        <td>
-                            <!-- Pseudo du joueur -->
-                        </td>
-                        <td>
-                            <!-- Nom de la course -->
-                        </td>
-                        <td>
-                            <!-- Position -->
-                        </td>
-                        <td>
-                            <!-- Chrono -->
-                        </td>
-                        <td>
-                            <!-- Date de la participation -->
-                        </td>
-                    </tr>
-                    <!--}-->
+                    @foreach (var item in Model.ToList())
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Joueur)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Course)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Position)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Chrono)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DateParticipation)
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>

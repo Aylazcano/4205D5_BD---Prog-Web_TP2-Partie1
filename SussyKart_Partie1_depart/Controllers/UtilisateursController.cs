@@ -121,6 +121,12 @@ namespace SussyKart_Partie1.Controllers
             string pseudo = HttpContext.User.FindFirstValue(ClaimTypes.Name);
             Utilisateur? utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(x => x.Pseudo == pseudo);
             
+            string query = "EXEC Utilisateurs.USP_DecryptNoCompteBancaire @Pseudo, @NoCompteBancaireChiffre";
+            List<SqlParameter> parameters = new List<SqlParameter>
+            {
+                new SqlParameter{ParameterName = "@Pseudo", Value = utilisateur.Pseudo},
+                new SqlParameter{ParameterName = "@NoCompteBancaireChiffre", Value = utilisateur.NoCompteBancaireChiffre}
+            };
             if (utilisateur == null) // Utilisateur supprimé entre-temps ... ?
             {
                 return RedirectToAction("Connexion", "Utilisateurs");
@@ -134,8 +140,8 @@ namespace SussyKart_Partie1.Controllers
                 // TODO:
                 // 1.Creer une procédure pour déchiffrer le NoCompteBancaireChiffre dans Sql_Scripts (Semaine10Partie2.pptx, page 14);
                 // 2.l'utiliser pour afficher le numero de compte bancaire.
-                NoBancaire = "123456789"
-            });
+                NoBancaire = "123456789"//await _context.ExecuteSqlRawAsync(query, parameters).FirstOrDefaultAsync().ToString();
+        });
         }
     }
 }
