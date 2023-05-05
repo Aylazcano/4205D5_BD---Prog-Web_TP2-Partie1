@@ -325,3 +325,26 @@ button {
 .race {
     position: absolute;
 }
+
+/* ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ */
+/* •○•○•         Avatar         •○•○• */
+/* ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ */
+
+.avatar{
+    position:relative;
+}
+
+.avatar a{
+    position:absolute;
+    display:inline-block;
+    top:5px;
+    right:5px;
+}
+
+.avatar img{
+    width:150px;
+}
+
+.avatarAmi{
+    width:100px;
+}
