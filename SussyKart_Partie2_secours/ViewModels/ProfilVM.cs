@@ -5,5 +5,6 @@
         public string Pseudo { get; set; } = null!;
         public DateTime DateInscription { get; set; }
         public string Courriel { get; set; } = null!;
+        public string? ImageUrl { get; set; }
     }
 }
