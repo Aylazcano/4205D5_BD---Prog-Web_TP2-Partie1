@@ -112,12 +112,26 @@ namespace SussyKart_Partie1.Controllers
                 Utilisateur? utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(x => x.Pseudo == pseudo);
                 if (utilisateur != null)
                 {
-                    return View(new ProfilVM()
+                    ProfilVM profilVM = new ProfilVM()
                     {
                         Pseudo = utilisateur.Pseudo,
                         DateInscription = utilisateur.DateInscription,
                         Courriel = utilisateur.Courriel
-                    });
+                    };
+
+                    // Si l’utilisateur possède un avatar, l’envoyer à la vue via le ProfilVM.
+                    Avatar? avatar = await _context.Avatars.FirstOrDefaultAsync(x => x.UtilisateurId == utilisateur.UtilisateurId);
+                    if (avatar != null)
+                    {
+                        List<ProfilVM> images = await _context.Avatars
+                            .Select(x => new ProfilVM
+                            {
+                                ImageUrl = x.FichierAvatar == null ? null : $"data:image/png;base64,{Convert.ToBase64String(x.FichierAvatar)}"
+                            })
+                            .ToListAsync();
+                        return View(profilVM);
+                    }
+                    return View(profilVM);
                 }
             }
             return NotFound();
@@ -128,20 +142,19 @@ namespace SussyKart_Partie1.Controllers
 		public async Task<IActionResult> Avatar()
 		{
             // Trouver l'utilisateur grâce à son cookie.
-            //ViewData["UtilisateurID"] = "Visiteur"; //Non utilisé?
             IIdentity? identite = HttpContext.User.Identity;
             if(identite!= null && identite.IsAuthenticated)
             {
                 string pseudo = HttpContext.User.FindFirstValue(ClaimTypes.Name);
                 Utilisateur? utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(x => x.Pseudo == pseudo);
-                if(utilisateur != null)
+                
+                /*// (AYL) Alternative plus courte.
+                Utilisateur? utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(x => x.Pseudo == identite.Name);*/
+
+                // Si utilisateur trouvé, retourner la vue Avatar avec un ImageUploadVM qui contient le bon UtilisateurID.
+                if (utilisateur != null)
                 {
-                    //ViewData["UtilisateurID"] = utilisateur.Pseudo; //Non utilisé?
-                    // Si utilisateur trouvé, retourner la vue Avatar avec un ImageUploadVM qui contient le bon UtilisateurID.
-                    var imageUploadVM = new ImageUploadVM
-                    {
-                        UtilisateurID = utilisateur.UtilisateurId
-                    };
+                    var imageUploadVM = new ImageUploadVM { UtilisateurID = utilisateur.UtilisateurId };
                     return View("Avatar",imageUploadVM);
                 }
             }
@@ -157,51 +170,42 @@ namespace SussyKart_Partie1.Controllers
 		{
             // Trouver l'utilisateur grâce à son cookie
             IIdentity? identite = HttpContext.User.Identity;
-            if (identite != null && identite.IsAuthenticated) // (AYL/?) Doit être authentifié pour changer d'avatar?
+            if (identite != null && identite.IsAuthenticated)
             {
                 string pseudo = HttpContext.User.FindFirstValue(ClaimTypes.Name);
                 Utilisateur? utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(x => x.Pseudo == pseudo);
-                if (utilisateur != null)
+                Avatar? avatar = _context.Avatars.FirstOrDefault(x => x.UtilisateurId == utilisateur.UtilisateurId);
+
+                // Si aucun utilisateur trouvé, retourner la vue Connexion
+                if (utilisateur == null)
+                    return View("Connexion");
+
+                if(ModelState.IsValid)
                 {
-                    if(ModelState.IsValid)
+                    // Si le FormFile contient bel et bien un fichier, ajouter / remplacer 
+                    // un avatar dans la BD et retourner au Profil.
+                    
+                    if (iuvm.FormFile != null && iuvm.FormFile.Length >= 0)
                     {
-                        // Si le FormFile contient bel et bien un fichier, ajouter / remplacer 
-                        // un avatar dans la BD et retourner au Profil.
-                        if (iuvm.FormFile != null && iuvm.FormFile.Length >= 0)
+                        MemoryStream stream = new MemoryStream();
+                        await iuvm.FormFile.CopyToAsync(stream);
+                        byte[] fichierAvatar = stream.ToArray();
+
+                        if (avatar == null)
                         {
-                            // Si aucun fichier fourni, retourner à la vue Avatar.
-                            // (AYL/EXTRA) Si le fichier fourni n'est pas une image, retourner à la vue Avatar.
-                            if (iuvm.FormFile.Length == 0 || !iuvm.FormFile.ContentType.Contains("image"))
-                            {
-                                return RedirectToAction("Avatar");
-                            }
-                            MemoryStream stream = new MemoryStream();
-                            await iuvm.FormFile.CopyToAsync(stream);
-                            byte[] bytes = stream.ToArray();
-
-                            //iuvm.Image.FileImage = fichierImage; // A DÉCOMMENTER
-
-
-                            // (AYL/?)Si le fichier fourni est une image, le sauvegarder dans le dossier wwwroot/images/avatars
-                            // et mettre à jour le champ Avatar de l'utilisateur dans la BD.
-                            //string nomFichier = Path.GetFileName(iuvm.FormFile.FileName);
-                            //string cheminFichier = Path.Combine(_he.WebRootPath, "images/avatars", nomFichier);
-                            //using (var stream = new FileStream(cheminFichier, FileMode.Create))
-                            //{
-                            //    await iuvm.FormFile.CopyToAsync(stream);
-                            //}
-                            //utilisateur.Avatar = nomFichier;
-                            //await _context.SaveChangesAsync();
-                            //return RedirectToAction("Profil");
+                            await _context.Avatars.AddAsync(new Avatar { UtilisateurId = utilisateur.UtilisateurId });
                         }
+                        else 
+                        {
+                            avatar.FichierAvatar = fichierAvatar;
+                            await _context.SaveChangesAsync();
+                        }
+                        return RedirectToAction("Profil");
                     }
-
                 }
             }
-            
-			// Si aucun utilisateur trouvé, retourner la vue Connexion
-			return View("Connexion");
-		}
+            return RedirectToAction("Avatar");
+        }
 
 		// Action qui mène vers une vue qui affiche notre liste d'amis et permet d'en ajouter de nouveaux.
 		[Authorize]

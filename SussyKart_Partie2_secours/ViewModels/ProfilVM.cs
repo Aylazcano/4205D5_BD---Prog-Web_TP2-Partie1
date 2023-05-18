@@ -1,4 +1,5 @@
 ﻿namespace SussyKart_Partie1.ViewModels
+
 {
     public class ProfilVM
     {
