@@ -110,27 +110,20 @@ namespace SussyKart_Partie1.Controllers
             {
                 string pseudo = HttpContext.User.FindFirstValue(ClaimTypes.Name);
                 Utilisateur? utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(x => x.Pseudo == pseudo);
+                // (AYL) Nécessaire pour: Si l’utilisateur possède un avatar, l’envoyer à la vue via le ProfilVM.
+                Avatar? avatar = await _context.Avatars.FirstOrDefaultAsync(x => x.UtilisateurId == utilisateur.UtilisateurId);
+
                 if (utilisateur != null)
                 {
                     ProfilVM profilVM = new ProfilVM()
                     {
+                        // Si l’utilisateur possède un avatar, l’envoyer à la vue via le ProfilVM.
+                        ImageUrl = avatar.FichierAvatar != null ? $"data:image/png;base64,{Convert.ToBase64String(avatar.FichierAvatar)}" : null,
+
                         Pseudo = utilisateur.Pseudo,
                         DateInscription = utilisateur.DateInscription,
                         Courriel = utilisateur.Courriel
                     };
-
-                    // Si l’utilisateur possède un avatar, l’envoyer à la vue via le ProfilVM.
-                    Avatar? avatar = await _context.Avatars.FirstOrDefaultAsync(x => x.UtilisateurId == utilisateur.UtilisateurId);
-                    if (avatar != null)
-                    {
-                        List<ProfilVM> images = await _context.Avatars
-                            .Select(x => new ProfilVM
-                            {
-                                ImageUrl = x.FichierAvatar == null ? null : $"data:image/png;base64,{Convert.ToBase64String(x.FichierAvatar)}"
-                            })
-                            .ToListAsync();
-                        return View(profilVM);
-                    }
                     return View(profilVM);
                 }
             }
