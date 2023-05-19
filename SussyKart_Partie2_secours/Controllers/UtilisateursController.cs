@@ -204,17 +204,30 @@ namespace SussyKart_Partie1.Controllers
 		[Authorize]
 		public async Task<IActionResult> Amis()
 		{
-			// Trouver l'utilisateur grâce à son cookie
-				
-			// Si aucun utilisateur trouvé, retourner la vue Connexion
-			return View("Connexion");	
-				
-			// Sinon, retourner la vue Amis en lui transmettant une liste d'AmiVM
-			// De plus, glisser dans ViewData["utilisateurID"] l'id de l'utilisateur qui a appelé l'action. (Car c'est utilisé dans Amis.cshtml)
-		}
+            // Trouver l'utilisateur grâce à son cookie
+            IIdentity? identite = HttpContext.User.Identity;
 
-		// Action appelée lorsque le formulaire pour ajouter un ami est rempli
-		[Authorize]
+            // Si aucun utilisateur trouvé, retourner la vue Connexion
+            if (identite == null) 
+                return View("Connexion");
+
+            // Sinon, retourner la vue Amis en lui transmettant une liste d'AmiVM
+            // De plus, glisser dans ViewData["utilisateurID"] l'id de l'utilisateur qui a appelé l'action. (Car c'est utilisé dans Amis.cshtml)
+            string pseudo = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            Utilisateur? utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(x => x.Pseudo == pseudo);
+            
+            ViewData["utilisateurID"] = utilisateur?.UtilisateurId;
+            
+            List<AmiVM> amiVMs = await _context.Amities
+                .Where(a => a.UtilisateurId == utilisateur.UtilisateurId)
+                .Select(a => new AmiVM())
+                .ToListAsync();
+
+            return View(amiVMs);
+        }
+
+        // Action appelée lorsque le formulaire pour ajouter un ami est rempli
+        [Authorize]
 		[HttpPost]
 		public async Task<IActionResult> AjouterAmi(int utilisateurID, string pseudoAmi)
 		{

@@ -7,5 +7,6 @@
         public DateTime DateInscription { get; set; }
         public string Courriel { get; set; } = null!;
         public string? ImageUrl { get; set; }
+        public int NbrAmis { get; set; }
     }
 }
