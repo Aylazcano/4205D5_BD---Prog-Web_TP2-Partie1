@@ -233,17 +233,37 @@ namespace SussyKart_Partie1.Controllers
 		[HttpPost]
 		public async Task<IActionResult> AjouterAmi(int utilisateurID, string pseudoAmi)
 		{
-			// Trouver l'utilisateur qui a appelé l'action ET l'utilisateur qui sera ajouté en ami
-					
-			// Si l'utilisateur qui appelle l'action n'existe pas, retourner la vue Connexion.
-			return View("Connexion");
-					
-			// Si l'ami à ajouter n'existe pas rediriger vers la vue Amis.
-			return RedirectToAction("Amis");
-					
-			// Si l'ami ne faisait pas déjà partie de la liste, créer une nouvelle amitié et l'ajouter dans la BD.
-			// Puis, dans tous les cas, rediriger vers la vue Amis.
-			return RedirectToAction("Amis");
+            // Trouver l'utilisateur qui a appelé l'action ET l'utilisateur qui sera ajouté en ami
+            Utilisateur? utilisateur = await _context.Utilisateurs.FindAsync(utilisateurID);
+            Utilisateur? ami = await _context.Utilisateurs.FirstOrDefaultAsync(u => u.Pseudo == pseudoAmi);
+
+            // Si l'utilisateur qui appelle l'action n'existe pas, retourner la vue Connexion.
+            if (utilisateur == null)
+                return View("Connexion");
+
+            // Si l'ami à ajouter n'existe pas rediriger vers la vue Amis.
+            if (ami == null)
+                return RedirectToAction("Amis");
+
+            // Si l'ami ne faisait pas déjà partie de la liste, créer une nouvelle amitié et l'ajouter dans la BD.
+            // Puis, dans tous les cas, rediriger vers la vue Amis.
+            bool amiExiste = await _context.Amities.AnyAsync(a => a.UtilisateurId == utilisateur.UtilisateurId && a.UtilisateurIdAmi == ami.UtilisateurId);
+
+            if (!amiExiste)
+            {
+                // Créer une nouvelle amitié entre les deux utilisateurs
+                Amitie nouvelleAmitie = new Amitie
+                {
+                    UtilisateurId = utilisateur.UtilisateurId,
+                    UtilisateurIdAmi = ami.UtilisateurId
+                };
+
+                // Ajouter la nouvelle amitié dans la base de données
+                _context.Amities.Add(nouvelleAmitie);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Amis");
 		}
 
 		// Action qui est appelée lorsqu'on appuie sur le bouton qui supprime un ami
