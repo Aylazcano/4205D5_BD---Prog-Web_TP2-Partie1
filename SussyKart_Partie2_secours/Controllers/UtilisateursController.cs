@@ -118,11 +118,12 @@ namespace SussyKart_Partie1.Controllers
                     ProfilVM profilVM = new ProfilVM()
                     {
                         // Si l’utilisateur possède un avatar, l’envoyer à la vue via le ProfilVM.
-                        ImageUrl = avatar.FichierAvatar != null ? $"data:image/png;base64,{Convert.ToBase64String(avatar.FichierAvatar)}" : null,
+                        ImageUrl = avatar?.FichierAvatar != null ? $"data:image/png;base64,{Convert.ToBase64String(avatar.FichierAvatar)}" : null,
 
                         Pseudo = utilisateur.Pseudo,
                         DateInscription = utilisateur.DateInscription,
-                        Courriel = utilisateur.Courriel
+                        Courriel = utilisateur.Courriel,
+                        NbrAmis = _context.Amities.Where(a => a.UtilisateurId == utilisateur.UtilisateurId).Count()
                     };
                     return View(profilVM);
                 }
@@ -141,8 +142,8 @@ namespace SussyKart_Partie1.Controllers
                 string pseudo = HttpContext.User.FindFirstValue(ClaimTypes.Name);
                 Utilisateur? utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(x => x.Pseudo == pseudo);
                 
-                /*// (AYL) Alternative plus courte.
-                Utilisateur? utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(x => x.Pseudo == identite.Name);*/
+                //// (AYL) Alternative plus courte.
+                //Utilisateur? utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(x => x.Pseudo == identite.Name);
 
                 // Si utilisateur trouvé, retourner la vue Avatar avec un ImageUploadVM qui contient le bon UtilisateurID.
                 if (utilisateur != null)
@@ -186,7 +187,8 @@ namespace SussyKart_Partie1.Controllers
 
                         if (avatar == null)
                         {
-                            await _context.Avatars.AddAsync(new Avatar { UtilisateurId = utilisateur.UtilisateurId });
+                            await _context.Avatars.AddAsync(new Avatar { UtilisateurId = utilisateur.UtilisateurId, FichierAvatar = fichierAvatar});
+                            await _context.SaveChangesAsync();
                         }
                         else 
                         {
