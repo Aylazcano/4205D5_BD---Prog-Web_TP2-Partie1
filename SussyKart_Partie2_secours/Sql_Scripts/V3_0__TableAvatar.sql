@@ -13,6 +13,10 @@ CREATE TABLE Utilisateurs.Avatar(
 );
 GO
 
+-- •○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•
+--			  Création des contraintes
+-- •○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•
+
 ALTER TABLE Utilisateurs.Avatar 
 ADD CONSTRAINT UC_Avatar_Identifiant UNIQUE (Identifiant);
 GO
