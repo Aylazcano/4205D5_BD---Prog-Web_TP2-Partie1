@@ -126,6 +126,8 @@ namespace SussyKart_Partie1.Controllers
                         Courriel = utilisateur.Courriel,
                         NbrAmis = _context.Amities.Where(a => a.UtilisateurId == utilisateur.UtilisateurId).Count()
                     };
+
+                    ViewData["UtilisateurID"] = utilisateur.UtilisateurId;
                     return View(profilVM);
                 }
             }
@@ -318,8 +320,8 @@ namespace SussyKart_Partie1.Controllers
 		// Action qui est appelée lorsqu'un utilisateur appuie sur le bouton qui supprime son compte
 		[Authorize]
 		[HttpPost]
-		public async Task<IActionResult> DesactiverCompte(int utilisateurID)
-		{
+        public async Task<IActionResult> DesactiverCompte(int utilisateurID)
+        {
             // Trouver l'utilisateur avec l'id utilisateurID et s'il n'existe pas retourner la vue Connexion
             var utilisateur = await _context.Utilisateurs.FindAsync(utilisateurID);
             if (utilisateur == null)

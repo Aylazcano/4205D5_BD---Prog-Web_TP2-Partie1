@@ -5,12 +5,14 @@
 USE TP2_SussyKart;
 GO
 
--- Crée le nouveau déclencheur INSTEAD OF DELETE Utilisateurs.Utilisateur
+-- Déclencheur INSTEAD OF DELETE Utilisateurs.Utilisateur
 CREATE OR ALTER TRIGGER Utilisateurs.TRd_Utilisateur_Utilisateur
 ON Utilisateurs.Utilisateur
 INSTEAD OF DELETE
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     -- Soft delete des utilisateurs
     UPDATE Utilisateurs.Utilisateur
     SET EstSuppr = 1

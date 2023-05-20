@@ -30,10 +30,10 @@
 			<!-- (FAIT) Formulaire à ajouter à la fin de la vue, mais juste avant les trois dernières fermetures de </div>
 			De plus, vous remarquez qu'il faudra passer l'id de l'utilisateur dans l'action Profil grâce au ViewData.
 			-->
-			<form asp-action="DesactiverCompte" class="mt-2">
-				<input type="number" hidden name="UtilisateurID" id="UtilisateurID" value="@ViewData["UtilisateurID"]" />
-				<button type="submit" class="btn btn-danger"><i class="bi bi-exclamation-triangle-fill"></i> Supprimer mon compte <i class="bi bi-exclamation-triangle-fill"></i></button>
-			</form>
+            <form asp-action="DesactiverCompte" class="mt-2">
+                <input type="number" hidden name="utilisateurID" id="utilisateurID" value="@ViewData["UtilisateurID"]" />
+                <button type="submit" class="btn btn-danger"><i class="bi bi-exclamation-triangle-fill"></i> Supprimer mon compte <i class="bi bi-exclamation-triangle-fill"></i></button>
+            </form>
         </div>
     </div>
 </div>
