@@ -5,12 +5,8 @@
 USE TP2_SussyKart;
 GO
 
--- Supprime le déclencheur INSTEAD OF DELETE Utilisateurs.Utilisateur précèdent
-DROP TRIGGER Utilisateurs.TRd_Utilisateur_Utilisateur
-GO
-
 -- Crée le nouveau déclencheur INSTEAD OF DELETE Utilisateurs.Utilisateur
-CREATE TRIGGER Utilisateurs.Utilisateur_DTRG_SupprimeUtilisateur
+CREATE OR ALTER TRIGGER Utilisateurs.TRd_Utilisateur_Utilisateur
 ON Utilisateurs.Utilisateur
 INSTEAD OF DELETE
 AS
@@ -30,8 +26,3 @@ BEGIN
     WHERE UtilisateurID IN (SELECT UtilisateurID FROM DELETED);
 END
 GO
-
-
-
-
-

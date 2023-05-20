@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace SussyKart_Partie1.Models
 {
     [Table("Utilisateur", Schema = "Utilisateurs")]
+    [Index("Pseudo", Name = "IX_Utilisateur_Pseudo")]
+    [Index("UtilisateurId", Name = "IX_Utilisateur_UtilisateurId")]
     [Index("Pseudo", Name = "UC_Utilisateur_Pseudo", IsUnique = true)]
     public partial class Utilisateur
     {

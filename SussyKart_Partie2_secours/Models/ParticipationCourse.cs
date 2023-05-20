@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace SussyKart_Partie1.Models
 {
     [Table("ParticipationCourse", Schema = "Courses")]
+    [Index("ParticipationCourseId", Name = "IX_ParticipationCourse_ParticipationCourseID")]
     public partial class ParticipationCourse
     {
         [Key]
