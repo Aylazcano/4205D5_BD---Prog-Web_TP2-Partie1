@@ -110,6 +110,7 @@ namespace SussyKart_Partie1.Controllers
             {
                 string pseudo = HttpContext.User.FindFirstValue(ClaimTypes.Name);
                 Utilisateur? utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(x => x.Pseudo == pseudo);
+
                 // (AYL) Nécessaire pour: Si l’utilisateur possède un avatar, l’envoyer à la vue via le ProfilVM.
                 Avatar? avatar = await _context.Avatars.FirstOrDefaultAsync(x => x.UtilisateurId == utilisateur.UtilisateurId);
 
@@ -214,16 +215,36 @@ namespace SussyKart_Partie1.Controllers
                 return View("Connexion");
 
             // Sinon, retourner la vue Amis en lui transmettant une liste d'AmiVM
-            // De plus, glisser dans ViewData["utilisateurID"] l'id de l'utilisateur qui a appelé l'action. (Car c'est utilisé dans Amis.cshtml)
             string pseudo = HttpContext.User.FindFirstValue(ClaimTypes.Name);
             Utilisateur? utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(x => x.Pseudo == pseudo);
-            
+
+            List<Amitie> amis = _context.Amities.Where(a => a.UtilisateurId == utilisateur.UtilisateurId).ToList();
+            List<AmiVM> amiVMs = new List<AmiVM>();
+            foreach (var a in amis)
+            {
+                AmiVM amiVM = new AmiVM();
+                Utilisateur? ami = _context.Utilisateurs.SingleOrDefault(u => u.UtilisateurId == a.UtilisateurIdAmi);
+                Avatar? avatarAmi = await _context.Avatars.FirstOrDefaultAsync(x => x.UtilisateurId == ami.UtilisateurId);
+
+                amiVM.AmiID = ami.UtilisateurId;
+                amiVM.Pseudo = ami.Pseudo;
+                amiVM.DateInscription = ami.DateInscription;
+
+                amiVM.ImageUrl = avatarAmi != null ? $"data:image/png;base64,{Convert.ToBase64String(avatarAmi.FichierAvatar)}" : null;
+
+                ParticipationCourse? derniereParticipation = _context.ParticipationCourses
+                    .Where(pc => pc.UtilisateurId == ami.UtilisateurId)
+                    .OrderByDescending(pc => pc.DateParticipation)
+                    .FirstOrDefault();
+
+                amiVM.DernierePartie = derniereParticipation?.DateParticipation ?? DateTime.MinValue;
+
+
+                amiVMs.Add(amiVM);
+            }
+
+            // De plus, glisser dans ViewData["utilisateurID"] l'id de l'utilisateur qui a appelé l'action. (Car c'est utilisé dans Amis.cshtml)
             ViewData["utilisateurID"] = utilisateur?.UtilisateurId;
-            
-            List<AmiVM> amiVMs = await _context.Amities
-                .Where(a => a.UtilisateurId == utilisateur.UtilisateurId)
-                .Select(a => new AmiVM())
-                .ToListAsync();
 
             return View(amiVMs);
         }
@@ -246,7 +267,6 @@ namespace SussyKart_Partie1.Controllers
                 return RedirectToAction("Amis");
 
             // Si l'ami ne faisait pas déjà partie de la liste, créer une nouvelle amitié et l'ajouter dans la BD.
-            // Puis, dans tous les cas, rediriger vers la vue Amis.
             bool amiExiste = await _context.Amities.AnyAsync(a => a.UtilisateurId == utilisateur.UtilisateurId && a.UtilisateurIdAmi == ami.UtilisateurId);
 
             if (!amiExiste)
@@ -263,6 +283,7 @@ namespace SussyKart_Partie1.Controllers
                 await _context.SaveChangesAsync();
             }
 
+            // Puis, dans tous les cas, rediriger vers la vue Amis.
             return RedirectToAction("Amis");
 		}
 
@@ -271,15 +292,27 @@ namespace SussyKart_Partie1.Controllers
 		[HttpPost]
 		public async Task<IActionResult> SupprimerAmi(int utilisateurID, int amiID)
 		{
-			// Trouver l'utilisateur qui a appelé l'action ET l'utilisateur qui sera retiré des amis
-			// Si l'utilisateur qui appelle l'action n'existe pas, retourner la vue Connexion.
-			return View("Connexion");
+            // Trouver l'utilisateur qui a appelé l'action ET l'utilisateur qui sera retiré des amis
+            Utilisateur? utilisateur = await _context.Utilisateurs.FindAsync(utilisateurID);
+            Utilisateur? ami = await _context.Utilisateurs.FindAsync(amiID);
+
+            // Si l'utilisateur qui appelle l'action n'existe pas, retourner la vue Connexion.
+            if (utilisateur == null)
+                return View("Connexion");
 							
 			// Si l'ami à ajouter n'existe pas rediriger vers la vue Amis.
-			return RedirectToAction("Amis");
-					
-			// Supprimer l'amitié de la BD et redirigrer vers la vue Amis.
-			return RedirectToAction("Amis");
+            if (ami == null)
+			    return RedirectToAction("Amis");
+
+            // Supprimer l'amitié de la BD et redirigrer vers la vue Amis.
+            Amitie? amitie = await _context.Amities.FirstOrDefaultAsync(a =>
+                (a.UtilisateurId == utilisateur.UtilisateurId && a.UtilisateurIdAmi == ami.UtilisateurId) ||
+                (a.UtilisateurId == ami.UtilisateurId && a.UtilisateurIdAmi == utilisateur.UtilisateurId));
+            
+            _context.Amities.Remove(amitie);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Amis");
 		}
 
 		// Action qui est appelée lorsqu'un utilisateur appuie sur le bouton qui supprime son compte
@@ -290,9 +323,7 @@ namespace SussyKart_Partie1.Controllers
             // Trouver l'utilisateur avec l'id utilisateurID et s'il n'existe pas retourner la vue Connexion
             var utilisateur = await _context.Utilisateurs.FindAsync(utilisateurID);
             if (utilisateur == null)
-            {
                 return View("Connexion");
-            }
 
             // " Suppimer " l'utilisateur de la BD. Votre déclencheur fera le reste.
             _context.Utilisateurs.Remove(utilisateur);
