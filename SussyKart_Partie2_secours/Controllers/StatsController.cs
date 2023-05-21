@@ -21,13 +21,18 @@ namespace SussyKart_Partie1.Controllers
         }
         
         // Section 1 : Compléter ToutesParticipations (Obligatoire)
-        public async Task<IActionResult> ToutesParticipations()
-        {
-            // Obtenir les participations grâce à une vue SQL
-            List<VwDetailsParticipation> participations = await _context.VwDetailsParticipations.Take(30).ToListAsync();
+		public async Task<IActionResult> ToutesParticipations()
+		{
+			// Obtenir une requête IQueryable pour les participations
+			IQueryable<VwDetailsParticipation> participationsQuery = _context.VwDetailsParticipations
+				.OrderByDescending(p => p.DateParticipation)
+				.Take(30);
 
-            return View(new FiltreParticipationVM() { Participations = participations });
-        }
+			// Exécuter la requête et récupérer les données nécessaires
+			var participations = await participationsQuery.ToListAsync();
+
+			return View(new FiltreParticipationVM() { Participations = participations });
+		}
 
         public async Task<IActionResult> ToutesParticipationsFiltre(FiltreParticipationVM fpvm)
         {
